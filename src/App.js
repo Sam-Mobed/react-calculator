@@ -27,8 +27,8 @@ function reducer(state, {type, payload}){
       if(payload.digit === "." && state.currentOperand.includes(".")) return state;
       return {
         ...state,
-        currentOperand: `${currentOperand || ""}${payload.digit}` //add the digit at the end of the operand, if current operand is null, we default to empty string
-      }
+        currentOperand: `${state.currentOperand || ""}${payload.digit}` //add the digit at the end of the operand, if current operand is null, we default to empty string
+      };
     case ACTIONS.CHOOSE_OPERATION:
       if (state.currentOperand == null && state.previousOperand == null) {
         return state;
@@ -133,16 +133,20 @@ function App() {
   const [{currentOperand, previousOperand, operation}, dispatch] = useReducer(reducer, {});
 
   return ( //we are using css grid here, hence the format of the classnames
-    <div className="calculator-grid"> //this div contains the entire calculator
-      <div className="output"> //this div contains the black section at the top of the calculator
-        <div className="previous-operand">{previousOperand} {operation}</div> //previous computation, the small one at the top
-        <div className="current-operand">{currentOperand}</div> //current computation
+  //calculator-grid contains the entire calculator
+  //output contains the black section at the top of the calculator
+  //we will use a reducer inside of react that will manage all the different states
+  //different states: current operand previous operand and the operation that we have
+    <div className="calculator-grid"> 
+      <div className="output"> 
+        <div className="previous-operand">{previousOperand} {operation}</div> 
+        <div className="current-operand">{currentOperand}</div> 
       </div>
-      <button className="span-two" onClick={() => dispatch({ type: ACTIONS.CLEAR })}>AC</button> //span-two because its larger
+      <button className="span-two" onClick={() => dispatch({ type: ACTIONS.CLEAR })}>AC</button> 
       <button onClick={() => dispatch({ type: ACTIONS.DELETE_DIGIT })}>DEL</button>
       <OperationButton operation="÷" dispatch={dispatch} />
-      <DigitButton digit="1" dispatch={dispatch} />//we will use a reducer inside of react that will manage all the different states
-      <DigitButton digit="2" dispatch={dispatch} />//different states: current operand previous operand and the operation that we have
+      <DigitButton digit="1" dispatch={dispatch} />
+      <DigitButton digit="2" dispatch={dispatch} />
       <DigitButton digit="3" dispatch={dispatch} />
       <OperationButton operation="*" dispatch={dispatch} />
       <DigitButton digit="4" dispatch={dispatch} />
